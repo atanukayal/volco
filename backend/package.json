@@ -19,11 +19,13 @@
   },
   "homepage": "https://github.com/atanukayal/volco#readme",
   "dependencies": {
+    "admin": "^1.4.1",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "firebase": "^11.1.0",
     "moment": "^2.30.1",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
