@@ -50,8 +50,5 @@ const logout = async (req, res) => {
     }
 };
 
-// Exporting Controllers
-module.exports = {
-    login,
-    logout
-};
+
+export { login, logout,  };
