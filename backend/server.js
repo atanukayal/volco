@@ -12,14 +12,21 @@ dotenv.config();
 // connect to db
 connectDB();
 
+// Middleware
 app.use(express.json());
 app.use(morgan('dev'));
 
-
-app.use('/api/v1/user',userRoutes);
-
-
+// Routes
+app.use('/api/v1/user', userRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.send('Hello World!')
+});
+
+// Define the PORT
+const PORT = process.env.PORT || 5000;
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port http://localhost:${PORT}`);
 });

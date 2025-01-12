@@ -1,7 +1,6 @@
 // Importing necessary modules
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -11,6 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 export const signUp = async (req, res) => {
   try {
     const { passcode } = req.params;
+
+    console.log(passcode);
 
     if (passcode != process.env.AUTH_CODE) {
       return res
@@ -31,10 +32,12 @@ export const signUp = async (req, res) => {
 
     const newUser = new User({ username, email });
 
+    await newUser.save();
+
     return res.status(201).json({
       message: "User created successfully",
       user: {
-        id: newUser.id,
+        id: newUser._id,
         username: newUser.username,
         email: newUser.email,
       },
@@ -73,7 +76,7 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        id: user.id,
+        id: user._id,
         username: user.username,
         email: user.email,
       },

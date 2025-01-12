@@ -3,11 +3,7 @@ import mongoose from 'mongoose';
 
 // Define the schema for the Users collection
 const userSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true
-  },
+ 
   username: {
     type: String,
     required: true,
