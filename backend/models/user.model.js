@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   displayName: {
     type: String,
-    required: true
+    default: ''
   },
   team_role: {
     type: String,
@@ -29,10 +29,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
-  },
-  password: {
-    type: String,
-    required: true
   },
   education: {
     type: String,
@@ -61,7 +57,6 @@ const userSchema = new mongoose.Schema({
     ref: 'User'
   }],
   workexperience: [{
-   
     ref: 'WorkExperience',
     type: Array,
     default: [],
@@ -73,7 +68,7 @@ const userSchema = new mongoose.Schema({
   avator: [{
     type: Array,
     default: [],
-    ref: 'Avator'
+    ref: 'Avatar'
   }],
   bio: [{
     type: Array,
