@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle login logic here
+    // Handle login logic here       
   }
 
   return (
