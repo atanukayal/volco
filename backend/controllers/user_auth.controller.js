@@ -8,19 +8,43 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+export const signUp = async (req, res) => {
+  try {
+    const { passcode } = req.params;
 
-const signUp = async (req, res) => {
-    try{
-      const {username, email} = req.body;
-
-      const existringUser = await User
+    if (passcode != process.env.AUTH_CODE) {
+      return res
+        .status(401)
+        .json({ message: "Invalid passcode, Unauthorized" });
     }
-}
+
+    const { username, email } = req.body;
+
+    const existringUser = await User.findOne({ email });
+    if (existringUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+    const userNameExists = await User.findOne({ username });
+    if (userNameExists) {
+      return res.status(400).json({ message: "Username already in use" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" + error });
+  }
+};
 
 // Login Controller
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
-    const { username , email } = req.body;
+    const { passcode } = req.params;
+
+    if (passcode != process.env.AUTH_CODE) {
+      return res
+        .status(401)
+        .json({ message: "Invalid passcode, Unauthorized" });
+    }
+
+    const { username, email } = req.body;
 
     // Find the user by email
     const user = await User.findOne({ email });
@@ -47,15 +71,11 @@ const login = async (req, res) => {
 };
 
 // Logout Controller
-const logout = async (req, res) => {
+export const logout = async (req, res) => {
   try {
-    
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.error("Error during logout:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-export { login, logout };
