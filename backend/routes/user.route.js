@@ -6,9 +6,9 @@ const router = express.Router();
 
 //routes
 //LOGIN || POST
-router.post("/login/:passcode", loginController);
+router.post("/login/:passcode", login);
 
 //REGISTER || POST
-router.post("/signup", registerController);
+router.post("/signup/:passcode", signUp);
 
    
