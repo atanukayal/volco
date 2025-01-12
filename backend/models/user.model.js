@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
   displayName: {
     type: String,
     required: true  
@@ -65,10 +70,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: Date.now
   },
-  avator: [{
+  avatar: [{
     type: Array,
     default: [],
-    ref: 'Avator'
+    ref: 'Avatar'
   }],
   bio: [{
     type: Array,
