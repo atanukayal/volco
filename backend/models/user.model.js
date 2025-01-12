@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   },
   displayName: {
     type: String,
-    required: true
+    required: true  
   },
   team_role: {
     type: String,

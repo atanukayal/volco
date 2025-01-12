@@ -8,10 +8,19 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+
+const signUp = async (req, res) => {
+    try{
+      const {username, email} = req.body;
+
+      const existringUser = await User
+    }
+}
+
 // Login Controller
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username , email } = req.body;
 
     // Find the user by email
     const user = await User.findOne({ email });
