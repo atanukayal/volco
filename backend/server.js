@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
+import userRoutes from './routes/user.route.js';
 
 const app = express();
 
@@ -15,9 +16,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-app.use('/api/v1/user', require('./routes/userRoutes.js'));
-app.use('/api/v1/admin', require('./routes/adminRoutes.js'));
-app.use('/api/v1/organisation', require('./routes/orgRoutes.js')); // organisation routes
+app.use('/api/v1/user',userRoutes);
+
 
 
 app.get('/', (req, res) => {
