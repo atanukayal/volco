@@ -59,7 +59,7 @@ export const login = async (req, res) => {
         .json({ message: "Invalid passcode, Unauthorized" });
     }
 
-    const { username, email } = req.body;
+    const { email } = req.body;
 
     // Find the user by email
     const user = await User.findOne({ email });
