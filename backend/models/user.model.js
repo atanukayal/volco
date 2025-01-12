@@ -30,10 +30,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  password: {
-    type: String,
-    required: true
-  },
   education: {
     type: String,
     default: ''
@@ -61,7 +57,6 @@ const userSchema = new mongoose.Schema({
     ref: 'User'
   }],
   workexperience: [{
-   
     ref: 'WorkExperience',
     type: Array,
     default: [],
