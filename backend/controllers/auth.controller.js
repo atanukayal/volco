@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import dotenv from "dotenv";
 import { admin } from "../config/firebase.js";
+import mongoose from "mongoose";
 
 dotenv.config();
 
-
 export const signUp = async (req, res) => {
   try {
-    const { passcode } = req.params;
+    const passcode = req.headers.passcode;
 
     if (passcode != process.env.AUTH_CODE) {
       return res
@@ -25,24 +25,39 @@ export const signUp = async (req, res) => {
 
     const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
 
-    if(!decodedToken){
+    if (!decodedToken) {
       return res.status(401).json({ message: "Invalid token" });
     }
 
     const { username, email } = req.body;
 
-    const existringUser = await User.findOne({ email });
-    if (existringUser) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
+
     const userNameExists = await User.findOne({ username });
     if (userNameExists) {
       return res.status(400).json({ message: "Username already in use" });
     }
 
-    const newUser = new User({ username, email });
+    const newUser = new User({
+      username,
+      email,
+      id: new mongoose.Types.ObjectId(),
+    });
 
-    await newUser.save();
+    // Save the new user and handle duplicate errors
+    try {
+      await newUser.save();
+    } catch (err) {
+      if (err.code === 11000) {
+        return res
+          .status(400)
+          .json({ message: "Duplicate field error", error: err });
+      }
+      throw err; // For unexpected errors
+    }
 
     return res.status(201).json({
       message: "User created successfully",
@@ -78,11 +93,13 @@ export const login = async (req, res) => {
 
     const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
 
-    if(!decodedToken){
+    if (!decodedToken) {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    const { email, uid } = decodedToken;
+    const { email } = req.body;
+
+    const { uid } = decodedToken;
 
     // Find the user by email
     const user = await User.findOne({ email });
@@ -112,6 +129,26 @@ export const logout = async (req, res) => {
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.error("Error during logout:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const checkUsername = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    return res.status(200).json({ message: "Username is available" });
+  } catch (error) {
+    console.error("Error checking username availability:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
