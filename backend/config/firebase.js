@@ -2,8 +2,7 @@ import admin from 'firebase-admin';
 import dotenv from 'dotenv';
 
 // Import the Firebase Admin SDK
-const admin = require('firebase-admin');
-require('dotenv').config();
+dotenv.config();
 
 
 // Initialize Firebase Admin SDK using environment variables
