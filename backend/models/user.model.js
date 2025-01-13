@@ -57,11 +57,11 @@ const userSchema = new mongoose.Schema({
     default: [],
     ref: 'Avatar'
   }],
-  bio: [{
-    type: Array,
-    default: [],
+  bio: {
+    type: String,
+    default: "",
     ref: 'Bio'
-  }],
+  },
   profileSetup: {
     type: Boolean,
     default: false
