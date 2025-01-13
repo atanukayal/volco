@@ -12,14 +12,6 @@ const userSchema = new mongoose.Schema({
   displayName: {
     type: String, 
   },
-  team_role: {
-    type: String,
-    default: ''
-  },
-  teams: {
-    type: String,
-    default: ''
-  },
   email: {
     type: String,
     required: true,
@@ -69,7 +61,11 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: [],
     ref: 'Bio'
-  }]
+  }],
+  profileSetup: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 // Create and export the model

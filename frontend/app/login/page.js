@@ -35,7 +35,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [manualLogin, setManualLogin] = useState(false); // Add this flag
   const router = useRouter();
-  
 
   useEffect(() => {
     // Check if the user is already logged in
@@ -54,8 +53,6 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    
-
     setManualLogin(true); // Set the flag to true
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -64,13 +61,14 @@ export default function LoginPage() {
         password
       );
       const response = await axios.post(
-        `http://localhost:8070/api/v1/auth/login/${process.env.NEXT_PUBLIC_AUTH_CODE}`,
+        `http://localhost:8070/api/v1/auth/login`,
         {
           email: userCredential.user.email,
         },
         {
           headers: {
             Authorization: `Bearer ${userCredential.user.accessToken}`,
+            passcode: process.env.NEXT_PUBLIC_AUTH_CODE
           },
         }
       );
