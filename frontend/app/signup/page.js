@@ -97,8 +97,6 @@ export default function SignupPage() {
       if (response.status === 201) {
         toast.success("Account created successfully!");
         router.push("/dashboard");
-      } else {
-        auth.signOut();
       }
     } catch (error) {
       console.error("Error signing up:", error);

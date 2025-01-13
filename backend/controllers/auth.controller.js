@@ -36,11 +36,6 @@ export const signUp = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    const userNameExists = await User.findOne({ username });
-    if (userNameExists) {
-      return res.status(400).json({ message: "Username already in use" });
-    }
-
     const newUser = new User({
       username,
       email,
@@ -76,7 +71,7 @@ export const signUp = async (req, res) => {
 // Login Controller
 export const login = async (req, res) => {
   try {
-    const { passcode } = req.params;
+    const passcode = req.headers.passcode;
 
     if (passcode != process.env.AUTH_CODE) {
       return res
