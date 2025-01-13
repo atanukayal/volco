@@ -26,17 +26,22 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+import dotenv from "dotenv";
+
 export default function LoginPage() {
+  dotenv.config();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [manualLogin, setManualLogin] = useState(false); // Add this flag
   const router = useRouter();
+  
 
   useEffect(() => {
     // Check if the user is already logged in
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && !manualLogin) { // Skip the logic if manualLogin is true
+      if (user && !manualLogin) {
+        // Skip the logic if manualLogin is true
         toast.success("You are already signed in!");
         router.push("/dashboard"); // Redirect to the dashboard
       }
@@ -48,6 +53,9 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    
+
     setManualLogin(true); // Set the flag to true
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -55,12 +63,22 @@ export default function LoginPage() {
         email,
         password
       );
-      console.log(userCredential.user.accessToken);
+      const response = await axios.post(
+        `http://localhost:8070/api/v1/auth/login/${process.env.NEXT_PUBLIC_AUTH_CODE}`,
+        {
+          email: userCredential.user.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userCredential.user.accessToken}`,
+          },
+        }
+      );
 
-      const response = await axios.post(`http://localhost/api/v1/`)
-
-      toast.success("Login successful!");
-      router.push("/dashboard");
+      if (response.status == 200) {
+        toast.success("Login successful");
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.log("Login error: ", error);
       toast.error("Invalid email or password");

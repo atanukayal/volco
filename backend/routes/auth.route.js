@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, signUp } from '../controllers/auth.controller.js';
+import { checkUsername, login, signUp } from '../controllers/auth.controller.js';
 import auth from '../middlewares/authmiddleware.js';
 
 const router = express.Router();
@@ -9,6 +9,8 @@ const router = express.Router();
 router.post("/login/:passcode", login);
 
 //REGISTER || POST
-router.post("/signup/:passcode", signUp);
+router.post("/signup", signUp);
+
+router.post("/check-username", checkUsername);
 
 export default router;     
