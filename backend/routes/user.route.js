@@ -11,4 +11,4 @@ router.post("/login/:passcode", login);
 //REGISTER || POST
 router.post("/signup/:passcode", signUp);
 
-export default router;
+export default router;     
