@@ -2,21 +2,31 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import dotenv from "dotenv";
+import { admin } from "../config/firebase.js";
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signUp = async (req, res) => {
   try {
     const { passcode } = req.params;
 
-    console.log(passcode);
-
     if (passcode != process.env.AUTH_CODE) {
       return res
         .status(401)
         .json({ message: "Invalid passcode, Unauthorized" });
+    }
+
+    const firebaseToken = req.headers.authorization?.split(" ")[1];
+
+    if (!firebaseToken) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
+
+    if(!decodedToken){
+      return res.status(401).json({ message: "Invalid token" });
     }
 
     const { username, email } = req.body;
@@ -59,7 +69,20 @@ export const login = async (req, res) => {
         .json({ message: "Invalid passcode, Unauthorized" });
     }
 
-    const { email } = req.body;
+    //toke
+    const firebaseToken = req.headers.authorization?.split(" ")[1];
+
+    if (!firebaseToken) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
+
+    if(!decodedToken){
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const { email, uid } = decodedToken;
 
     // Find the user by email
     const user = await User.findOne({ email });
@@ -67,15 +90,11 @@ export const login = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate a JWT token
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: "24h",
-    });
-
     return res.status(200).json({
       message: "Login successful",
-      token,
+      firebaseToken,
       user: {
+        firebaseId: uid,
         id: user._id,
         username: user.username,
         email: user.email,

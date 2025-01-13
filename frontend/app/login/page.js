@@ -24,6 +24,7 @@ import {
 import { auth } from "@/firebase";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,12 +33,6 @@ export default function LoginPage() {
   const [manualLogin, setManualLogin] = useState(false); // Add this flag
   const router = useRouter();
 
-<<<<<<< HEAD
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Handle login logic here       
-  }
-=======
   useEffect(() => {
     // Check if the user is already logged in
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -60,7 +55,10 @@ export default function LoginPage() {
         email,
         password
       );
-      console.log(userCredential);
+      console.log(userCredential.user.accessToken);
+
+      const response = await axios.post(`http://localhost/api/v1/`)
+
       toast.success("Login successful!");
       router.push("/dashboard");
     } catch (error) {
@@ -85,7 +83,6 @@ export default function LoginPage() {
       toast.error(error.message || "Failed to sign up with Google.");
     }
   };
->>>>>>> 1f91cb3540faf3d2a11a4c27dd1d8b58b0733058
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
