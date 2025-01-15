@@ -1,25 +1,14 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FaGoogle } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/firebase";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -54,9 +43,7 @@ export default function SignupPage() {
   };
 
   useEffect(() => {
-    // Check if the user is already logged in on component mount
     const user = auth.currentUser;
-
     if (user) {
       setIsLoggedIn(true);
     }
@@ -74,21 +61,12 @@ export default function SignupPage() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
 
       const response = await axios.post(
         `http://localhost:8070/api/v1/auth/signup`,
-        {
-          username,
-          email,
-          uid
-        },
+        { username, email, uid },
         {
           headers: {
             Authorization: `Bearer ${userCredential.user.accessToken}`,
@@ -99,7 +77,7 @@ export default function SignupPage() {
 
       if (response.status === 201) {
         toast.success("Account created successfully!");
-        router.push("/dashboard");
+        router.push("/profile-setup");
       }
     } catch (error) {
       console.error("Error signing up:", error);
@@ -115,10 +93,23 @@ export default function SignupPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      toast.success("Signed in successfully with Google!", user);
-      router.push("/dashboard");
+      const response = await axios.post(
+        `http://localhost:8070/api/v1/auth/google-signup`,
+        { email: user.email, uid: user.uid },
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+            passcode: process.env.NEXT_PUBLIC_AUTH_CODE,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success("Signed up successfully with Google!");
+        router.push("/profile-setup");
+      }
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      console.error("Error signing up with Google:", error);
       toast.error(error.message || "Failed to sign up with Google.");
     }
   };
@@ -222,3 +213,4 @@ export default function SignupPage() {
     </div>
   );
 }
+
