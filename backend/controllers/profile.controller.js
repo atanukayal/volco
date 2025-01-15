@@ -1,4 +1,3 @@
-
 import User from "../models/user.model.js";
 import dotenv from "dotenv";
 import { admin } from "../config/firebase.js";
@@ -6,7 +5,7 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
     try {
         const {displayName, avatar, bio} = req.body;
 
@@ -23,6 +22,7 @@ const updateProfile = async (req, res) => {
         user.displayName = displayName;
         user.avatar = avatar;
         user.bio = bio;
+
         await user.save();
         res.status(200).json({message: "Profile updated successfully"});
 
