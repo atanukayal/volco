@@ -80,11 +80,14 @@ export default function SignupPage() {
         password
       );
 
+      const uid = userCredential.user.uid;
+
       const response = await axios.post(
         `http://localhost:8070/api/v1/auth/signup`,
         {
           username,
           email,
+          uid
         },
         {
           headers: {

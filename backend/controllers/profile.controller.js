@@ -13,7 +13,7 @@ export const updateProfile = async (req, res) => {
             return res.status(400).json({message: "All fields are required"});
         }
 
-        const {uid} = req.user; 
+        const {uid} = req.user;
 
         const user = await User.findOne({uid});
         if (!user) {
