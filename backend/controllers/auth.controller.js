@@ -29,7 +29,11 @@ export const signUp = async (req, res) => {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    const { username, email } = req.body;
+    const { username, email, uid } = req.body;
+
+    if (!username || !email || !uid) {
+      return res.status(400).json({ message: "Please provide all fields" });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -39,6 +43,7 @@ export const signUp = async (req, res) => {
     const newUser = new User({
       username,
       email,
+      uid,
       id: new mongoose.Types.ObjectId(),
     });
 
@@ -60,6 +65,7 @@ export const signUp = async (req, res) => {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
+        uid: newUser.uid,
       },
     });
   } catch (error) {

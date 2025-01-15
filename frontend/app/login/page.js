@@ -60,6 +60,8 @@ export default function LoginPage() {
         email,
         password
       );
+
+      
       const response = await axios.post(
         `http://localhost:8070/api/v1/auth/login`,
         {
