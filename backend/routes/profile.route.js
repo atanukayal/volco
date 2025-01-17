@@ -1,10 +1,11 @@
-import express, { Router } from 'express';
-import authmiddleware from '../middlewares/authmiddleware';
-import { updateProfile } from '../controllers/profile.controller';
-import upload from "../middleware/multer.config.js";
+import express from "express";
+import authenticate from "../middleware/authenticate.js";
+import upload from "../middlewares/multer.js";
+import { updateProfile } from "../controllers/profile.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-router.put('/profile-set', authmiddleware ,upload.single("avatar"),updateProfile);
+// Profile setup route
+router.post("/setup", authenticate, upload.single("avatar"), updateProfile);
 
 export default router;
