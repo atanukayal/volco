@@ -1,7 +1,8 @@
 import JWT from "jsonwebtoken";
 import { admin } from "../config/firebase.js";
 
-const auth = async (req, res, next) => {
+export
+ const auth = async (req, res, next) => {
   try {
     const firebasetoken = req.headers.authorization?.spilt(" ")[1];
 
@@ -31,4 +32,4 @@ const auth = async (req, res, next) => {
   }
 };
 
-export default auth;
+

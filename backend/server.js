@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.route.js';
 import cors from 'cors';
+import userRoutes from './routes/user.route.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/user', userRoutes);  
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
